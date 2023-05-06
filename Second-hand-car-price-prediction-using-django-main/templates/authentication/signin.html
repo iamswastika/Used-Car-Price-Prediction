@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    {%load static%}
+    <link rel="stylesheet" href="/static/login.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+    
+</head>
+
+<body>
+
+    <div class="wrapper-L">
+        <div class="form-wrapper-L sign-in">
+            <form method="post" action="/signin" class="mb-2" autocomplete="off">
+                <h2>Login</h2>
+                {% csrf_token %}
+
+                <div class="input-group">
+
+                    <input type="text" id="username" name="username" Required>
+                    <label> Username</label>
+
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <input type="password" id="pass1" name="pass1" Required>
+                    <label> Password</label>
+
+
+                </div>
+               
+
+                <button type="submit" value="Login"> Login</button>
+
+                <div class="signup-link">
+                    <p> Don't have an account? <a href="/signup">Register</a></p>
+
+                </div>
+
+                {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>{{error_message}}</strong>
+                </div>
+                {% endif %}
+
+
+            </form>
+        </div>
+
+    </div>
+
+
+
+
+</body>
+
+</html>

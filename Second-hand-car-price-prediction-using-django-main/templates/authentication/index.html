@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carcompanion</title>
+  {%load static%}
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="banner">
+    {% if messages %}
+    {% for message in messages %}
+    <!-- <div class="main-alert alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="color: black">
+        <strong>{{message}}</strong> 
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div> -->
+    <div class="main-alert alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="color: black">
+      <strong>{{ message }}</strong> 
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="this.parentElement.style.display='none';">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    
+    {% endfor %}
+    {% endif %}
+
+
+
+
+
+
+    {% if user.is_authenticated %}
+    <div class="nav">
+
+      <div class="sop">
+        <button type="submit"><a href="/cars" style="--clr:#1e9bff"><span>Predicted Cars</span><i></i></a></button>
+      </div>
+      <div class="sos">
+        <button type="submit"><a href="/signout" style="--clr:#1e9bff"><span>SignOut</span><i></i></a></button>
+        
+      </div>
+    </div>
+
+    <div class="container">
+      <h3 class="hi text-white">Hello {{fname}}!</h3><br>
+      <h4 class="lgi text-white">You're successfully logged in.</h4><br>
+
+      <h1 class="form-title">CarCompanion</h1>
+      <form method="post" action="{% url 'result' %}">
+        {% csrf_token %}
+        <div class="main-user-info">
+          <div class="user-input-box">
+
+            <label for="model">Car Model</label>
+            <input type="text" id="model" name="model" placeholder="Eg. Maruti Wagon" required="required"
+              value="{{car_model.model|default_if_none:''}}" />
+
+            <label for="year">Year</label>
+            <input type="number" id="year" name="year" placeholder="Eg. 13 0R 5" required="required"
+              value="{{car_model.year|default_if_none:''}}" />
+            
+            <label for="kilometer">Kilometers Driven</label>
+              <input type="text" id="kilometer" name="kilometer" placeholder="Eg. 41000" required="required"
+                value="{{car_model.kilometer_driven|default_if_none:''}}" />
+
+
+            <label for="Mileage">Mileage</label>
+            <input type="text" id="Mileage" name="mileage" placeholder="Eg. 26.60" required="required"
+              value="{{car_model.mileage|default_if_none:''}}" />
+
+            <label for="engine">Engine</label>
+            <input type="text" id="engine" name="engine" placeholder="Eg. 998.0" required="required"
+              value="{{car_model.engine|default_if_none:''}}" />
+
+            <label for="Ownership">Owner Type</label>
+            <select name="owner" id="dropdownblock">
+              <option value="0" {% if car_model.owner_type == "0" %} selected {% endif %}>First</option>
+              <option value="1" {% if car_model.owner_type == "1" %} selected {% endif %}>Second</option>
+              <option value="2" {% if car_model.owner_type == "2" %} selected {% endif %}>Third</option>
+              <option value="3" {% if car_model.owner_type == "3" %} selected {% endif %}>Fourth & Above</option>
+            </select>
+
+            <br>
+
+            <label for="Transmission">Transmission Type</label>
+            <select name="transmission" id="dropdownblock">
+              <option value="0" {% if car_model.transmisson_type == "0" %} selected {% endif %}>Manual</option>
+              <option value="1" {% if car_model.transmisson_type == "1" %} selected {% endif %}>Automatic</option>
+            </select>
+            <br>
+
+
+
+
+            <label for="Fueltype">Fuel Type</label>
+            <select name="fuel" id="dropdownblock">
+              <option value="0" {% if car_model.fuel_type == "0" %} selected {% endif %}>CNG</option>
+              <option value="1" {% if car_model.fuel_type == "1" %} selected {% endif %}>Diesel</option>
+              <option value="2" {% if car_model.fuel_type == "2" %} selected {% endif %}>Petrol</option>
+              <option value="3" {% if car_model.fuel_type == "3" %} selected {% endif %}>LPG</option>
+              <option value="4" {% if car_model.fuel_type == "4" %} selected {% endif %}>Electric</option>
+            </select>
+            <br>
+
+            <label for="power">Power</label>
+            <input type="text" id="power" name="power" placeholder="Eg. 58.16" required="required"
+              value="{{car_model.power|default_if_none:''}}" />
+
+            <label for="seats">Seats</label>
+            <input type="text" id="seats" name="seats" placeholder="Eg. 5" required="required"
+              value="{{car_model.seat|default_if_none:''}}" />
+
+
+            <div class="d-flex flex-row w-100">
+              <div class="p-2">
+                <div class="form-submit-btn">
+                  <button type="submit" value="Predict Price">Predict Car price</button>
+                </div>
+              </div>
+              <div class="p-2">
+                {% if predicted_price %}
+                <div class="form-submit-btn alert-predicted-price alert alert-success font-weight-bold" role="alert">
+                  NPR {{predicted_price}}
+                </div>
+                {% endif %}
+                {% if error_message %}
+                <div class="form-submit-btn alert-predicted-price alert alert-danger font-weight-bold" role="alert">
+                  {{error_message}}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            <h3 class="note">Note: This price are exclusive of all the vat and taxes imposed by the government</h3>
+          </div>
+          
+        </div>
+      </form>
+
+    </div>
+
+
+
+    {% else %}
+    <div class="content">
+      <h1>Carcompanion </h1>
+      <p>Best for less </p>
+      <div>
+        <button type="submit"><a href="/signin" style="--clr:#1e9bff"><span>Sign in</span><i></i></a></button>
+        <button type="submit"><a href="/signup" style="--clr:#1e9bff"><span>Register</span><i></i></a></button>
+
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+
+</body>
+
+</html>

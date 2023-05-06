@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/display.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    {% block content %}
+    <div class="container">
+      <button type="submit">
+        <a href="/"
+          ><span><img src="/static/carlogo.png" alt="Logo" class="logo" /></span
+          ><i></i
+        ></a>
+      </button>
+      <h1 class="heading">Search Results</h1>
+      {% if post %}
+      <div class="row">
+        {% for car in post %}
+        <div class="col">
+          <div class="card">
+            <div class="card-header">{{ car.model }}</div>
+            <div class="card-body">
+              <ul class="list-group">
+                <li class="list-group-item">Year: {{ car.year }}</li>
+                <li class="list-group-item">
+                  Kilometers Driven: {{ car.kilometer_driven }}
+                </li>
+                <li class="list-group-item">Mileage: {{ car.mileage }}</li>
+                <li class="list-group-item">Engine: {{ car.engine }}</li>
+
+                {% if car.owner_type == "0" %}
+                <li class="list-group-item">Owner Type: First</li>
+                {% elif car.owner_type == "1" %}
+                <li class="list-group-item">Owner Type: Second</li>
+                {% elif car.owner_type == "2" %}
+                <li class="list-group-item">Owner Type: Third</li>
+                {% elif car.owner_type == "3" %}
+                <li class="list-group-item">Owner Type: Fourth and Above</li>
+                {% endif %} {% if car.fuel_type == "0" %}
+                <li class="list-group-item">Transmission Type: Manual</li>
+                {% elif car.fuel_type == "1" %}
+                <li class="list-group-item">Transmission Type: Automatic</li>
+
+                {% endif %} {% if car.fuel_type == "0" %}
+                <li class="list-group-item">Fuel Type: CNG</li>
+                {% elif car.fuel_type == "1" %}
+                <li class="list-group-item">Fuel Type: Diesel</li>
+                {% elif car.fuel_type == "2" %}
+                <li class="list-group-item">Fuel Type: Petrol</li>
+                {% elif car.fuel_type == "3" %}
+                <li class="list-group-item">Fuel Type: LPG</li>
+                {% elif car.fuel_type == "4" %}
+                <li class="list-group-item">Fuel Type: Electric</li>
+                {% endif %}
+                <li class="list-group-item">
+                  Seat: {{ car.seat|floatformat:0 }}
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <p>Predicted Price: NPR{{  car.predicted_price|floatformat:2}}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p>No results found.</p>
+      {% endif %}
+    </div>
+    {% endblock %}
+  </body>
+</html>

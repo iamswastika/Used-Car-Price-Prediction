@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    {%load static%}
+    <link rel="stylesheet" href="/static/login.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="wrapper-S">
+        <div class="form-wrapper-S sign-up">
+
+            <form method="post" action="/signup" autocomplete="off">
+                <h2> Signup</h2>
+                {% csrf_token %}
+
+                <div class="input-group">
+                    <input type="text" id="username" name="username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="fname" name="fname" required>
+                    <label for="fname">First Name </label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="lname" name="lname" required>
+                    <label for="lname">Last Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" required>
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="pass1" name="pass1" required>
+                    <label for="pass1">Password</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="pass2" name="pass2" required>
+                    <label for="pass2">Confirm Password</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="--clr:#1e9bff">Sign Up</button>
+
+                <div class="signup-link">
+                    <p>Already have an account ? <a href="/signin" class="signupbtn">Login</a></p>
+                </div>
+                {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>{{error_message}}</strong>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+
+    </div>
+
+    <script src="" async defer></script>
+</body>
+
+</html>
