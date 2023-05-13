@@ -357,42 +357,65 @@ def getPrediction(name, year, kilometer, mileage, engine, owner, transmission, f
     return round(inverse_scaled,2)
     
 
+MIN_MILEAGE = 0
+MAX_MILEAGE = 40
+MIN_ENGINE = 600
+MAX_ENGINE = 6500
+MIN_POWER = 40
+MAX_POWER = 2000
+MIN_SEATS = 2
+MAX_SEATS = 10
+MIN_YEAR=1
+MAX_YEAR=25
+
+
+
+
 def result(request):
     if request.method == 'GET':
         return render(request, "authentication/index.html")
     else:
         name = CAR_MODELS.get(request.POST.get('model'), None)
         if not name:
-            error_message = f"{request.POST.get('model')} Model does not exists. Please enter valid model."
+            error_message = f"{request.POST.get('model')} Model does not exist. Please enter a valid model."
             return render(request, 'authentication/index.html', {'error_message': error_message})
+        
         year = request.POST.get('year')
-        kilometer = request.POST.get('kilometer')
-        mileage = request.POST.get('mileage')
-        engine = request.POST.get('engine')
-        owner = request.POST.get('owner')
-        transmission = request.POST.get('transmission')
-        fuel = request.POST.get('fuel')
-        power = request.POST.get('power')
-        seats = request.POST.get('seats')
         try:
             year = float(year)
-            kilometer = float(kilometer)
-            mileage = float(mileage)
-            engine = float(engine)
-            power = float(power)
-            seats = int(seats)
-            if year < 0 or year > datetime.datetime.now().year - 25:
-                raise ValidationError("Invalid year. Year must be between {} and {}.".format(datetime.datetime.now().year - 25, datetime.datetime.now().year))
-            if year<0 or kilometer < 0 or mileage < 0 or engine < 0 or power < 0 or seats < 0:
-                raise ValidationError("Input cannot be negative")
+           
+            if year < MIN_YEAR or year > MAX_YEAR:
+              raise ValidationError("Invalid Year. Year must be between {} and {}.".format(MIN_YEAR, MAX_YEAR))
+
             
+            kilometer = float(request.POST.get('kilometer'))
+            mileage = float(request.POST.get('mileage'))
+            engine = float(request.POST.get('engine'))
+            owner = request.POST.get('owner')
+            transmission = request.POST.get('transmission')
+            fuel = request.POST.get('fuel')
+            power = float(request.POST.get('power'))
+            seats = int(request.POST.get('seats'))
+            
+            if kilometer < 0 or mileage < MIN_MILEAGE or mileage > MAX_MILEAGE:
+                raise ValidationError("Invalid mileage. Mileage must be between {} and {}.".format(MIN_MILEAGE, MAX_MILEAGE))
+
+            if engine < MIN_ENGINE or engine > MAX_ENGINE:
+                raise ValidationError("Invalid engine size. Engine size must be between {} and {}.".format(MIN_ENGINE, MAX_ENGINE))
+
+            if power < MIN_POWER or power > MAX_POWER:
+                raise ValidationError("Invalid power. Power must be between {} and {}.".format(MIN_POWER, MAX_POWER))
+
+            if seats < MIN_SEATS or seats > MAX_SEATS:
+                raise ValidationError("Invalid number of seats. Number of seats must be between {} and {}.".format(MIN_SEATS, MAX_SEATS))
+
         except ValueError:
-            error_message = "Invalid Input"
+            error_message = "Invalid input. Please enter valid values."
             return render(request, 'authentication/index.html', {'error_message': error_message})
         except ValidationError as e:
             error_message = str(e)
             return render(request, 'authentication/index.html', {'error_message': error_message})
-        result = getPrediction(int(name), int(year), kilometer, mileage, engine, owner, transmission, fuel, power, seats)
+        
         data = {
             "model": request.POST.get('model'),
             "year": int(year),
@@ -403,14 +426,15 @@ def result(request):
             "transmission_type": transmission,
             "fuel_type": fuel,
             "power": power,
-            "seat": seats,
-            "predicted_price": result
+            "seat": seats
         }
+        result = getPrediction(int(name), int(year), kilometer, mileage, engine, owner, transmission, fuel, power, seats)
+        data["predicted_price"] = result
+        
         PredictCarModel.objects.create(**data)
         latest_entry = PredictCarModel.objects.latest('id')
-        predicted_price = round(latest_entry.predicted_price*130, 2) if request.POST.get('model') else None
+        predicted_price = round(latest_entry.predicted_price * 130, 2) if request.POST.get('model') else None
         return render(request, 'authentication/index.html', {'result': result, 'predicted_price': predicted_price, 'car_model': latest_entry})
-
 
 
 def cars(request):

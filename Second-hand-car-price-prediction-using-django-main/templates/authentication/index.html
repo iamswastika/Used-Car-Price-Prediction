@@ -57,7 +57,7 @@
       <h4 class="lgi text-white">You're successfully logged in.</h4><br>
 
       <h1 class="form-title">CarCompanion</h1>
-      <form method="post" action="{% url 'result' %}">
+      <form method="post" action="{% url 'result' %}" autocomplete="off">
         {% csrf_token %}
         <div class="main-user-info">
           <div class="user-input-box">
@@ -67,7 +67,7 @@
               value="{{car_model.model|default_if_none:''}}" />
 
             <label for="year">Year</label>
-            <input type="number" id="year" name="year" placeholder="Eg. 13 0R 5" required="required"
+            <input type="number" id="year" name="year" placeholder="Eg. 5" required="required"
               value="{{car_model.year|default_if_none:''}}" />
             
             <label for="kilometer">Kilometers Driven</label>
@@ -76,7 +76,7 @@
 
 
             <label for="Mileage">Mileage</label>
-            <input type="text" id="Mileage" name="mileage" placeholder="Eg. 26.60" required="required"
+            <input type="text" id="Mileage" name="mileage" placeholder="Eg. 26.60 / Electric=0" required="required"
               value="{{car_model.mileage|default_if_none:''}}" />
 
             <label for="engine">Engine</label>
