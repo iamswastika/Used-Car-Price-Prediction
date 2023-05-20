@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   /* font-family: sans_serif ; */
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   zoom: 0.95;
 }
 .banner {
@@ -75,7 +75,7 @@ a:hover {
   box-shadow: 0 0 35px var(--clr);
 }
 a:before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 2px;
   background: rgba(0, 0, 0, 0.975);
@@ -90,7 +90,7 @@ a i {
   display: block;
 }
 a i:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 80%;
@@ -106,7 +106,7 @@ a:hover i:before {
 }
 a i:after {
   /* text-decoration: none; */
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0%;
   left: 20%;
@@ -224,12 +224,21 @@ body {
 
 .form-submit-btn {
   margin-top: 40px;
+  margin: 3px;
+  margin-left: 0;
+}
+.p-2 {
+  display: flex;
+
+  margin-left: 0;
+
+  margin-top: 2.5rem;
 }
 
 .form-submit-btn button {
   display: block;
   width: 100%;
-  margin-top: 10px;
+
   font-size: 20px;
   padding: 13px;
   border: none;
@@ -244,7 +253,7 @@ body {
 }
 
 .main-alert {
-  height: 4rem;
+  height: 2rem;
   font-size: 20px;
   padding: 1rem !important;
 }
@@ -276,18 +285,17 @@ body {
   .sop {
     display: flex;
     padding: 1rem;
-    
+
     /* justify-content: right; */
   }
-  .sos{
+  .sos {
     display: flex;
     padding: 1rem;
     flex-direction: row;
     /* justify-content: right; */
-    
   }
-  .nav{
-    display:flex;
+  .nav {
+    display: flex;
     justify-content: right;
   }
   .hi {

@@ -26,15 +26,18 @@ Fuel_type = (
 class PredictCarModel(models.Model):
     model = models.CharField(max_length=50)
     year = models.IntegerField()
-    kilometer_driven = models.FloatField(default = 0)
+    kilometer_driven = models.FloatField(default=0)
     mileage = models.FloatField()
     engine = models.FloatField()
     owner_type = models.CharField(max_length=150, choices=Owner_type)
-    transmission_type = models.CharField(max_length=150,choices=Transmission_type)
+    transmission_type = models.CharField(max_length=150, choices=Transmission_type)
     fuel_type = models.CharField(max_length=150, choices=Fuel_type)
     power = models.FloatField()
-    seat = models.FloatField(default =0)
-    predicted_price = models.FloatField(null=True, blank=True)
+    seat = models.FloatField(default=0)
+    predicted_price1 = models.FloatField(null=True, blank=True)
+    predicted_price2 = models.FloatField(null=True, blank=True)
+    predicted_price3 = models.FloatField(null=True, blank=True)
+
 
 
     def __str__(self) -> str:

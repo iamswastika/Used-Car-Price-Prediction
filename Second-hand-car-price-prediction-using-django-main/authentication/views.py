@@ -341,20 +341,24 @@ def signin(request):
     return render(request, "authentication/signin.html")
 
 def getPrediction(name, year, kilometer, mileage, engine, owner, transmission, fuel, power, seats):
-    model = pickle.load(open("ml_model.sav", "rb"))
+    rfmodel = pickle.load(open("ml_model.sav", "rb"))
+    brmodel = pickle.load(open("bl_model.sav", "rb"))
+    lrmodel = pickle.load(open("ll_model.sav", "rb"))
     with open('scaler.sav', 'rb') as f:
         scaled = pickle.load(f)
-    # scaled = pickle.load(open("scaler.sav", "rb"))
     encoded = pickle.load(open("oencoder.sav", "rb"))
     modelname = pickle.load(open("carmodel.sav", "rb"))
     
     with open('yscaler.sav', 'rb') as f:
         y_scaler = pickle.load(f)
-    transformed = scaled.transform(np.array([name, year, kilometer, mileage, engine, owner, transmission, fuel, power, seats]).reshape(1,-1))
-    prediction = model.predict(transformed)[0]
-    # breakpoint();
-    inverse_scaled = y_scaler.inverse_transform(np.array([prediction]).reshape(-1,1))[0][0]
-    return round(inverse_scaled,2)
+    
+    transformed = scaled.transform(np.array([name, year, kilometer, mileage, engine, owner, transmission, fuel, power, seats]).reshape(1, -1))
+    
+    prediction1 = y_scaler.inverse_transform(rfmodel.predict(transformed).reshape(-1, 1))[0][0]
+    prediction2 = y_scaler.inverse_transform(brmodel.predict(transformed).reshape(-1, 1))[0][0]
+    prediction3 = y_scaler.inverse_transform(lrmodel.predict(transformed).reshape(-1, 1))[0][0]
+    
+    return round(prediction1, 2), round(prediction2, 2), round(prediction3, 2)
     
 
 MIN_MILEAGE = 0
@@ -385,9 +389,8 @@ def result(request):
             year = float(year)
            
             if year < MIN_YEAR or year > MAX_YEAR:
-              raise ValidationError("Invalid Year. Year must be between {} and {}.".format(MIN_YEAR, MAX_YEAR))
+                raise ValidationError("Invalid Year. Year must be between {} and {}.".format(MIN_YEAR, MAX_YEAR))
 
-            
             kilometer = float(request.POST.get('kilometer'))
             mileage = float(request.POST.get('mileage'))
             engine = float(request.POST.get('engine'))
@@ -428,13 +431,20 @@ def result(request):
             "power": power,
             "seat": seats
         }
-        result = getPrediction(int(name), int(year), kilometer, mileage, engine, owner, transmission, fuel, power, seats)
-        data["predicted_price"] = result
+        
+        predictions = getPrediction(int(name), int(year), kilometer, mileage, engine, owner, transmission, fuel, power, seats)
+        data["predicted_price1"] = predictions[0]
+        data["predicted_price2"] = predictions[1]
+        data["predicted_price3"] = predictions[2]
         
         PredictCarModel.objects.create(**data)
         latest_entry = PredictCarModel.objects.latest('id')
-        predicted_price = round(latest_entry.predicted_price * 130, 2) if request.POST.get('model') else None
-        return render(request, 'authentication/index.html', {'result': result, 'predicted_price': predicted_price, 'car_model': latest_entry})
+        
+        predicted_price1 = round(latest_entry.predicted_price1 * 130, 2) if request.POST.get('model') else None
+        predicted_price2 = round(latest_entry.predicted_price2 * 130, 2) if request.POST.get('model') else None
+        predicted_price3 = round(latest_entry.predicted_price3 * 130, 2) if request.POST.get('model') else None
+
+        return render(request, 'authentication/index.html', {'predicted_price1': predicted_price1, 'predicted_price2': predicted_price2, 'predicted_price3': predicted_price3, 'car_model': latest_entry})
 
 
 def cars(request):
@@ -444,7 +454,11 @@ def cars(request):
     else:
         predict = PredictCarModel.objects.all().order_by('model')
         for car in predict:
-         car.predicted_price *= 130
+         car.predicted_price1 *= 130
+        for car in predict:
+         car.predicted_price2 *= 130
+        for car in predict:
+         car.predicted_price3 *= 130
     return render(request, 'authentication/cars.html', {'predict': predict})
 
 def searchbar(request):
@@ -463,23 +477,21 @@ def signout(request):
     messages.success(request,"Logged Out successfully")
     return redirect('home')
 
-def activate(request,uidb64,token):
+def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         myuser = User.objects.get(pk=uid)
-    except (TypeError,ValueError,OverflowError,User.DoesNotExist):
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         myuser = None
-
-    if myuser is not None and generate_token.check_token(myuser,token):
+    
+    if myuser is not None and default_token_generator.check_token(myuser, token):
         myuser.is_active = True
         # user.profile.signup_confirmation = True
         myuser.save()
-        login(request,myuser)
-        messages.success(request, "Your Account has been activated!!")
+        login(request, myuser)
+        messages.success(request, "Your account has been activated!")
         return redirect('signin')
     else:
-        return render(request,'activation_failed.html')
-
-
+        return render(request, 'activation_failed.html')
 
 
