@@ -86,10 +86,10 @@ body {
   z-index: 2;
   border: 4px double;
   border-color: #bbeeee #00ff62; /* Set the border colors */
-  border-radius: 20px; /* Add border radius to the outer border */
+
   box-shadow: 0 0 20px rgb(0, 174, 255);
-  width: 300px;
-  height: 400px;
+  width: 310px;
+  height: 475px;
 }
 
 .card-header {
@@ -111,7 +111,7 @@ body {
   padding: 10px;
   color: white;
   background-color: black;
-  height: 74%;
+  height: 65%;
 }
 .list-group-item {
   border: none;
@@ -120,12 +120,13 @@ body {
 
 .card-footer {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: black;
   border-radius: 0 0 20px 20px;
   color: white;
-  /* height: 20%; */
+
   font-weight: bold;
   padding: 10px;
   border-top: 1px solid #ccc;

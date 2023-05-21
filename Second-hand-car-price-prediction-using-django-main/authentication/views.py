@@ -453,12 +453,13 @@ def cars(request):
         predict = PredictCarModel.objects.filter(model__icontains=search).order_by('model')
     else:
         predict = PredictCarModel.objects.all().order_by('model')
-        for car in predict:
-         car.predicted_price1 *= 130
-        for car in predict:
-         car.predicted_price2 *= 130
-        for car in predict:
-         car.predicted_price3 *= 130
+    for car in predict:
+        if car.predicted_price1 is not None:
+            car.predicted_price1 *= 130
+        if car.predicted_price2 is not None:
+            car.predicted_price2 *= 130
+        if car.predicted_price3 is not None:
+            car.predicted_price3 *= 130
     return render(request, 'authentication/cars.html', {'predict': predict})
 
 def searchbar(request):
@@ -467,10 +468,18 @@ def searchbar(request):
         post = PredictCarModel.objects.filter(model__icontains=search)
         
         for car in post:
-         car.predicted_price *= 130
+            if car.predicted_price1 is not None:
+                car.predicted_price1 *= 130
+            if car.predicted_price2 is not None:
+                car.predicted_price2 *= 130
+            if car.predicted_price3 is not None:
+                car.predicted_price3 *= 130
+    
         return render(request, 'authentication/searchbar.html', {'post': post})
     else:
         return redirect('cars')
+
+
 
 def signout(request):
     logout(request)

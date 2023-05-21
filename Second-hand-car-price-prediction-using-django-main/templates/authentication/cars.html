@@ -88,9 +88,12 @@
               </ul>
             </div>
             <div class="card-footer">
-              <p>Random Forest Regression: NPR {{ car.predicted_price1|floatformat:2}}</p>
-              <p>Bagging Regression: NPR {{ car.predicted_price2|floatformat:2}}</p>
-              <p>Linear Regression: NPR {{ car.predicted_price3|floatformat:2}}</p>
+<div class="list-group">
+
+  <p class="list-group-item">Random Forest Regression:  {{ car.predicted_price1|floatformat:2}}</p>
+  <p class="list-group-item">Bagging Regression: {{ car.predicted_price2|floatformat:2}}</p>
+  <p class="list-group-item">Linear Regression: {{ car.predicted_price3|floatformat:2}}</p>
+</div>
             
             </div>
           </div>
